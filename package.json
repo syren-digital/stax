@@ -4,9 +4,12 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "SKIP_ENV_VALIDATION=1 next build",
+    "build": "next build",
     "start": "next start",
     "lint": "eslint"
+  },
+  "engines": {
+    "node": ">=20.0.0"
   },
   "dependencies": {
     "@clerk/nextjs": "^7.0.7",
