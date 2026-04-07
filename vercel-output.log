@@ -1,0 +1,25 @@
+? Set up and deploy “~/Desktop/Companies/Stax”? (Y/n)[55G[2K[G? Set up and deploy “~/Desktop/Companies/Stax”? (Y/n) y[56G[2K[G? Set up and deploy “~/Desktop/Companies/Stax”? yes[52G
+[?25hLoading scopes…
+? Which scope should contain your project? (Use arrow keys)
+❯ Steve Ryan's projects[?25l[24G[2K[1A[2K[G? Which scope should contain your project? Steve Ryan's projects[65G
+[?25hSearching for existing projects…
+? Found project “steve-ryans-projects/stax”. Link to it? (Y/n)[64G[2K[G? Found project “steve-ryans-projects/stax”. Link to it? (Y/n) y[65G[2K[G? Found project “steve-ryans-projects/stax”. Link to it? yes[61G
+[?25hLinked to steve-ryans-projects/stax (created .vercel)
+? Would you like to pull environment variables now? (Y/n)[59G[2K[G? Would you like to pull environment variables now? (Y/n) y[60G[2K[G? Would you like to pull environment variables now? yes[56G
+[?25hRetrieving project…
+> Downloading `development` Environment Variables for steve-ryans-projects/stax
+Downloading
+Created .env.local file and added it to .gitignore [214ms]
+Deploying steve-ryans-projects/stax
+Uploading [--------------------] (0.0B/2.7MB)
+Uploading [=====---------------] (702.4KB/2.7MB)
+Uploading [==========----------] (1.4MB/2.7MB)
+Uploading [===============-----] (2.0MB/2.7MB)
+Uploading [====================] (2.7MB/2.7MB)
+Inspect: https://vercel.com/steve-ryans-projects/stax/5vTbswhtj2DMuhtaejokV82drofS [5s]
+Production: https://stax-il76dqbs9-steve-ryans-projects.vercel.app [5s]
+https://stax-il76dqbs9-steve-ryans-projects.vercel.appBuilding...
+Building...
+[2K[1A[2K[GProduction: https://stax-il76dqbs9-steve-ryans-projects.vercel.app [59s]
+Completing...
+Aliased: https://stax-eight.vercel.app [59s]
