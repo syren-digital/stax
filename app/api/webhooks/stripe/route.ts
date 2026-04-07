@@ -1,21 +1,30 @@
 import { NextRequest } from "next/server";
 import { stripe } from "@/lib/stripe";
 import { prisma } from "@/lib/prisma";
-import { env } from "@/lib/env";
 import type { SubscriptionTier, SubscriptionStatus } from "@/app/generated/prisma/enums";
 import type Stripe from "stripe";
 
-const PRICE_TO_TIER: Record<string, SubscriptionTier> = {
-  [process.env.STRIPE_PRICE_ID_STARTER ?? ""]: "starter",
-  [process.env.STRIPE_PRICE_ID_GROWTH ?? ""]: "growth",
-  [process.env.STRIPE_PRICE_ID_PRO ?? ""]: "pro",
-};
-
-function tierFromPriceId(priceId: string): SubscriptionTier {
-  return PRICE_TO_TIER[priceId] ?? "starter";
-}
-
 export async function POST(request: NextRequest) {
+  // Instantiate inside the handler so env vars are read at request time, not build time.
+  const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
+
+  if (!stripe) {
+    return new Response("Stripe is not configured", { status: 503 });
+  }
+  if (!webhookSecret) {
+    return new Response("STRIPE_WEBHOOK_SECRET is not set", { status: 503 });
+  }
+
+  const priceToTier: Record<string, SubscriptionTier> = {
+    [process.env.STRIPE_PRICE_ID_STARTER ?? ""]: "starter",
+    [process.env.STRIPE_PRICE_ID_GROWTH ?? ""]: "growth",
+    [process.env.STRIPE_PRICE_ID_PRO ?? ""]: "pro",
+  };
+
+  function tierFromPriceId(priceId: string): SubscriptionTier {
+    return priceToTier[priceId] ?? "starter";
+  }
+
   const body = await request.text();
   const sig = request.headers.get("stripe-signature");
 
@@ -25,7 +34,7 @@ export async function POST(request: NextRequest) {
 
   let event: Stripe.Event;
   try {
-    event = stripe.webhooks.constructEvent(body, sig, env.STRIPE_WEBHOOK_SECRET ?? "");
+    event = stripe.webhooks.constructEvent(body, sig, webhookSecret);
   } catch (err) {
     const message = err instanceof Error ? err.message : "Unknown error";
     return new Response(`Webhook signature verification failed: ${message}`, {

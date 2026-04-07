@@ -2,6 +2,11 @@ import { createEnv } from "@t3-oss/env-nextjs";
 import * as z from "zod";
 
 export const env = createEnv({
+  // Skip validation during `next build` so missing vars don't crash the build.
+  // Set SKIP_ENV_VALIDATION=1 in Vercel → Settings → Environment Variables
+  // (Build environment only) as a fallback. All required vars still validated
+  // at runtime on first request.
+  skipValidation: !!process.env.SKIP_ENV_VALIDATION,
   server: {
     DATABASE_URL: z.url(),
     REDIS_URL: z.url(),
