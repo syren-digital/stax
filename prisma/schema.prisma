@@ -1,0 +1,117 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client"
+  output   = "../app/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum SubscriptionTier {
+  starter
+  growth
+  pro
+  enterprise
+}
+
+enum SubscriptionStatus {
+  active
+  trialing
+  past_due
+  canceled
+  unpaid
+}
+
+enum WidgetType {
+  share_price_number
+  share_price_chart
+  announcements
+}
+
+model Organisation {
+  id         String   @id @default(cuid())
+  clerkOrgId String?  @unique
+  name       String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  subscriptions Subscription[]
+  projects      Project[]
+  auditLogs     AuditLog[]
+}
+
+model Subscription {
+  id                   String             @id @default(cuid())
+  organisationId       String
+  stripeCustomerId     String             @unique
+  stripeSubscriptionId String?            @unique
+  stripePriceId        String?
+  tier                 SubscriptionTier   @default(starter)
+  status               SubscriptionStatus @default(trialing)
+  currentPeriodStart   DateTime?
+  currentPeriodEnd     DateTime?
+  cancelAtPeriodEnd    Boolean            @default(false)
+  createdAt            DateTime           @default(now())
+  updatedAt            DateTime           @updatedAt
+
+  organisation Organisation @relation(fields: [organisationId], references: [id], onDelete: Cascade)
+}
+
+model Project {
+  id             String   @id @default(cuid())
+  organisationId String
+  name           String
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  organisation Organisation @relation(fields: [organisationId], references: [id], onDelete: Cascade)
+  widgets      Widget[]
+
+  @@index([organisationId])
+}
+
+model Widget {
+  id             String     @id @default(cuid())
+  projectId      String
+  embedKey       String     @unique @default(cuid())
+  type           WidgetType
+  ticker         String
+  primaryColor   String     @default("#1a56db")
+  secondaryColor String     @default("#e1effe")
+  labelColor     String     @default("#6b7280")
+  fontFamily     String     @default("Inter")
+  chartRange     String     @default("1y")
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
+
+  project     Project            @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  impressions WidgetImpression[]
+
+  @@index([projectId])
+}
+
+model WidgetImpression {
+  id             String   @id @default(cuid())
+  widgetId       String
+  referrerDomain String?
+  createdAt      DateTime @default(now())
+
+  widget Widget @relation(fields: [widgetId], references: [id], onDelete: Cascade)
+
+  @@index([widgetId, createdAt])
+}
+
+model AuditLog {
+  id             String   @id @default(cuid())
+  organisationId String
+  action         String
+  metadata       Json?
+  createdAt      DateTime @default(now())
+
+  organisation Organisation @relation(fields: [organisationId], references: [id], onDelete: Cascade)
+
+  @@index([organisationId, createdAt])
+}

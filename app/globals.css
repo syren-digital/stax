@@ -1,26 +1,98 @@
 @import "tailwindcss";
 
+html {
+  font-size: 20px;
+  min-height: 100%;
+  background: linear-gradient(45deg, #252623, #000000) fixed;
+}
+
+html.light {
+  background: linear-gradient(45deg, #ffffff, #f2f2f0) fixed;
+}
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --bg:           #252623;
+  --bg-raised:    #2e2f2c;
+  --accent:       #b5f978;
+  --glass-bg:     rgba(255, 255, 255, 0.06);
+  --glass-border: rgba(255, 255, 255, 0.10);
+  --text:         #f2f2f0;
+  --text-muted:   rgba(242, 242, 240, 0.55);
+}
+
+:root.light {
+  --bg:           #f2f2f0;
+  --bg-raised:    #e8e8e6;
+  --accent:       #5c9e20;
+  --glass-bg:     rgba(0, 0, 0, 0.04);
+  --glass-border: rgba(0, 0, 0, 0.09);
+  --text:         #1a1b19;
+  --text-muted:   rgba(26, 27, 25, 0.50);
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --color-bg:           var(--bg);
+  --color-bg-raised:    var(--bg-raised);
+  --color-accent:       var(--accent);
+  --color-text:         var(--text);
+  --color-text-muted:   var(--text-muted);
+  --font-sans: var(--font-inter);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: transparent;
+  min-height: 100dvh;
+  color: var(--text);
+  font-family: "tenon", sans-serif;
+  font-weight: 300;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: "roboto-mono", monospace;
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+:root.light body {
+  background: linear-gradient(45deg, #ffffff, #f2f2f0);
+}
+
+/* Glass card */
+.glass {
+  background: var(--glass-bg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--glass-border);
+  border-radius: 1.25rem;
+}
+
+.glass-sm {
+  background: var(--glass-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--glass-border);
+  border-radius: 0.875rem;
+}
+
+/* Accent glow */
+.accent-glow {
+  box-shadow: 0 0 24px rgba(181, 249, 120, 0.25);
+}
+
+/* Logo draw animation */
+@keyframes logo-draw {
+  to { stroke-dashoffset: 0; }
+}
+@keyframes logo-fill {
+  from { fill: transparent; }
+  to { fill: currentColor; stroke-width: 0; stroke: transparent; }
+}
+@keyframes logo-chevron-top {
+  from { opacity: 0; transform: translateY(-30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes logo-chevron-bottom {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
 }
